@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>키즈 퀴즈랜드</title>
   <link rel="stylesheet" href="styles.css" />
-  <!-- 파비콘 404 없애려면 아래 중 하나:
-  <link rel="icon" href="favicon.ico">
-  또는 <link rel="icon" href="data:,">
-  -->
+  <link rel="icon" href="data:,">
 </head>
 <body>
   <div class="bg"></div>
@@ -16,18 +13,15 @@
   <main class="app">
     <header class="topbar">
       <div class="brand">
-        <div class="logo">🧠</div>
+        <div class="logo">🎁</div>
         <div>
           <div class="title">키즈 퀴즈랜드</div>
-          <div class="subtitle">정답 → 코인🪙 / 상자🎁 / 성장(알→아기→슈퍼) / 출석&퀘스트 / 오답노트</div>
+          <div class="subtitle">정답 → 코인/XP → 성장(알→아기→슈퍼) + 상자뽑기 + 꾸미기</div>
         </div>
       </div>
 
       <div class="topActions">
-        <div class="chip" title="출석 연속">
-          🔥 <b id="streakDayText">0</b>일
-        </div>
-        <div class="chip" title="내 코인">
+        <div class="coinChip" title="내 코인">
           🪙 <b id="coinText">0</b>
         </div>
         <button class="btn ghost sm" id="btnOpenShop">상점</button>
@@ -40,7 +34,7 @@
     <section class="card" id="screenSetup">
       <div class="cardHeader">
         <h2>시작 설정</h2>
-        <p>난이도 / 카테고리 / 캐릭터 / 타이머를 골라주세요.</p>
+        <p>난이도 / 카테고리 / 타이머 / 캐릭터를 고르세요.</p>
       </div>
 
       <div class="grid2">
@@ -51,24 +45,9 @@
             <button class="segBtn" data-diff="normal">보통</button>
             <button class="segBtn" data-diff="hard">어려움</button>
           </div>
-          <div class="hint" id="diffHint">쉬움: 코인 +3~ / XP +8~</div>
+          <div class="hint" id="diffHint">쉬움: 코인 +3~ / XP +</div>
         </div>
 
-        <div class="panel">
-          <h3>카테고리</h3>
-          <div class="row">
-            <select id="catSelect" class="select">
-              <option value="all">전체</option>
-              <option value="수학">수학</option>
-              <option value="과학">과학</option>
-              <option value="영어">영어</option>
-            </select>
-          </div>
-          <div class="hint">data.json의 cat(수학/과학/영어)을 기준으로 필터링해요.</div>
-        </div>
-      </div>
-
-      <div class="grid2" style="margin-top:12px;">
         <div class="panel">
           <h3>문제 수</h3>
           <div class="row">
@@ -79,39 +58,44 @@
         </div>
 
         <div class="panel">
+          <h3>카테고리</h3>
+          <select id="catSelect" class="select">
+            <option value="all">전체</option>
+          </select>
+          <div class="hint">data.json에 cat(수학/과학/영어 등) 넣으면 자동으로 늘어나요.</div>
+        </div>
+
+        <div class="panel">
           <h3>타이머 모드</h3>
-          <div class="row" style="gap:10px;">
-            <label class="toggle">
-              <input type="checkbox" id="timerOn" />
-              <span class="toggleUi"></span>
-              <span class="muted">사용</span>
-            </label>
-            <select id="timerSec" class="select">
-              <option value="10">10초</option>
-              <option value="12">12초</option>
-              <option value="15" selected>15초</option>
-              <option value="20">20초</option>
-            </select>
-          </div>
-          <div class="hint">시간이 끝나면 자동 오답 처리돼요(다음 문제로는 ‘다음’ 버튼).</div>
+          <select id="timerSelect" class="select">
+            <option value="0">OFF</option>
+            <option value="20">20초</option>
+            <option value="30">30초</option>
+            <option value="45">45초</option>
+          </select>
+          <div class="hint">시간 안에 풀면 긴장감 + 보너스! (일일퀘스트도 있어요)</div>
         </div>
       </div>
 
       <div class="panel" style="margin-top:12px;">
         <h3>캐릭터</h3>
         <div class="chars" id="charList"></div>
-        <div class="hint">캐릭터는 XP로 성장하고(알→아기→슈퍼), 상점에서 아이템을 장착할 수 있어요.</div>
+        <div class="hint">
+          캐릭터는 <b>레벨에 따라 성장</b>해요: 알 → 아기 → 슈퍼<br/>
+          상자에서 아이템을 뽑아 꾸밀 수 있어요.
+        </div>
       </div>
 
       <div class="actions">
         <button class="btn primary" id="btnStart">시작하기 🚀</button>
         <button class="btn ghost" id="btnOpenShop2">상점 가기 🛍️</button>
-        <button class="btn ghost" id="btnOpenNotebook2">오답노트 📒</button>
-        <button class="btn ghost" id="btnResetAll" title="코인/아이템/퀘스트/오답노트/성장 초기화">전체 초기화</button>
+        <button class="btn ghost" id="btnResetAll" title="코인/아이템/기록 초기화">전체 초기화</button>
       </div>
 
       <div class="miniStats">
         <span class="muted">최고기록:</span> <b id="bestText">-</b>
+        <span class="dot">•</span>
+        <span class="muted">오늘 출석:</span> <b id="checkinText">미완료</b>
       </div>
     </section>
 
@@ -130,13 +114,13 @@
           <div class="avatarMeta">
             <div class="avatarName" id="avatarName">캐릭터</div>
             <div class="avatarSub">
-              <span>단계 <b id="stageText">알</b></span>
+              <span>Lv <b id="levelText">1</b></span>
               <span class="dot">•</span>
-              <span>레벨 <b id="levelText">1</b></span>
+              <span>XP <b id="xpText">0</b>/<b id="xpNeedText">20</b></span>
               <span class="dot">•</span>
-              <span>연속정답 <b id="streakText">0</b></span>
+              <span>연속 <b id="streakText">0</b></span>
               <span class="dot">•</span>
-              <span>이번판 코인 <b id="runCoinsText">0</b></span>
+              <span>이번판 🪙 <b id="runCoinsText">0</b></span>
             </div>
           </div>
         </div>
@@ -150,17 +134,17 @@
             <span class="dot">•</span>
             <span class="muted">점수</span> <b id="scoreText">0</b>
             <span class="dot">•</span>
-            <span class="muted">남은시간</span> <b id="timerText">-</b>
+            <span class="muted">타이머</span> <b id="timerText">OFF</b>
+          </div>
+          <div class="timerBar">
+            <div class="timerFill" id="timerFill"></div>
           </div>
         </div>
       </div>
 
       <div class="questionBox">
-        <div class="qMetaRow">
-          <div class="qBadge" id="qBadge">쉬움</div>
-          <div class="qCat" id="qCat">전체</div>
-        </div>
-
+        <div class="qBadge" id="qBadge">쉬움</div>
+        <div class="qMetaLine muted" id="qMetaLine">카테고리: -</div>
         <h2 class="question" id="qText">문제</h2>
         <div class="choices" id="choices"></div>
 
@@ -169,7 +153,7 @@
         <div class="actions">
           <button class="btn ghost" id="btnQuit">그만하기</button>
           <button class="btn ghost" id="btnOpenShop3">상점</button>
-          <button class="btn ghost" id="btnOpenNotebook3">오답노트</button>
+          <button class="btn ghost" id="btnOpenNotebook2">오답노트</button>
           <button class="btn primary hidden" id="btnNext">다음 문제 ➜</button>
         </div>
       </div>
@@ -179,7 +163,7 @@
     <section class="card hidden" id="screenShop">
       <div class="cardHeader">
         <h2>상점 🛍️</h2>
-        <p>코인으로 아이템 구매 / 상자(가챠) 열기 / 출석&일일퀘스트 보상 받기</p>
+        <p>상자를 열어 아이템을 뽑고, 꾸미고, 일일 퀘스트 보상을 챙겨요.</p>
       </div>
 
       <div class="shopTop">
@@ -196,12 +180,11 @@
             <div>
               <div class="avatarName" id="shopAvatarName">캐릭터</div>
               <div class="muted" style="margin-top:4px;">
-                단계 <b id="shopStageText">알</b> · 레벨 <b id="shopLevelText">1</b><br/>
-                내 코인: <b id="shopCoinText">0</b> 🪙 · 출석 🔥<b id="shopStreakDayText">0</b>일
+                내 코인: <b id="shopCoinText">0</b> 🪙
               </div>
               <div class="hint" style="margin-top:10px;">
-                * 저장은 브라우저에 자동 저장됩니다.<br/>
-                * 다른 기기에서 이어하려면 “내보내기/가져오기”를 쓰세요.
+                ✅ 저장은 자동(브라우저)<br/>
+                ✅ 다른 기기에서 이어하려면 내보내기/가져오기
               </div>
             </div>
           </div>
@@ -216,46 +199,57 @@
         </div>
 
         <div class="panel">
-          <h3>탭</h3>
-          <div class="seg" id="shopTabs">
-            <button class="segBtn active" data-tab="items_all">아이템(전체)</button>
-            <button class="segBtn" data-tab="items_hat">모자</button>
-            <button class="segBtn" data-tab="items_face">얼굴</button>
-            <button class="segBtn" data-tab="items_hand">소품</button>
-            <button class="segBtn" data-tab="items_effect">효과</button>
-            <button class="segBtn" data-tab="boxes">상자(가챠)</button>
-            <button class="segBtn" data-tab="daily">출석/퀘스트</button>
+          <h3>메뉴</h3>
+          <div class="seg" id="shopModeTabs">
+            <button class="segBtn active" data-mode="boxes">상자(가챠)</button>
+            <button class="segBtn" data-mode="items">아이템</button>
+            <button class="segBtn" data-mode="daily">출석/퀘스트</button>
           </div>
-          <div class="hint" id="shopHint">아이템을 클릭하면 구매/장착이 돼요.</div>
           <div class="actions">
             <button class="btn ghost" id="btnUnequipAll">장착 해제</button>
           </div>
+          <div class="hint" id="shopHint">상자를 열어 아이템을 뽑아보세요!</div>
         </div>
       </div>
 
-      <div class="panel" style="margin-top:12px;">
-        <h3 id="shopPanelTitle">아이템</h3>
+      <!-- Boxes -->
+      <div class="panel" id="shopBoxes" style="margin-top:12px;">
+        <h3>상자(가챠)</h3>
+        <div class="shopGrid3" id="boxGrid"></div>
+        <div class="shopMsg muted" id="boxMsg"></div>
+      </div>
 
-        <div id="dailyPanel" class="hidden">
-          <div class="dailyRow">
-            <div class="dailyCard">
-              <div class="dailyTitle">오늘 출석 보상</div>
-              <div class="muted" id="attendanceDesc">-</div>
-              <div class="actions" style="margin-top:10px;">
-                <button class="btn primary" id="btnClaimAttendance">출석 보상 받기</button>
-              </div>
-            </div>
-
-            <div class="dailyCard">
-              <div class="dailyTitle">오늘의 일일 퀘스트</div>
-              <div class="muted">완료하면 보상을 받을 수 있어요.</div>
-              <div class="questList" id="questList"></div>
-            </div>
-          </div>
+      <!-- Items -->
+      <div class="panel hidden" id="shopItems" style="margin-top:12px;">
+        <h3>아이템</h3>
+        <div class="seg" id="shopTabs">
+          <button class="segBtn active" data-slot="all">전체</button>
+          <button class="segBtn" data-slot="hat">모자</button>
+          <button class="segBtn" data-slot="face">얼굴</button>
+          <button class="segBtn" data-slot="hand">소품</button>
+          <button class="segBtn" data-slot="effect">효과</button>
         </div>
-
+        <div class="hint">아이템 클릭: 보유 시 장착/해제 토글</div>
         <div class="shopGrid" id="shopGrid"></div>
         <div class="shopMsg muted" id="shopMsg"></div>
+      </div>
+
+      <!-- Daily -->
+      <div class="panel hidden" id="shopDaily" style="margin-top:12px;">
+        <h3>오늘의 보상</h3>
+        <div class="dailyRow">
+          <div class="dailyCard">
+            <div class="dailyTitle">출석 보상</div>
+            <div class="dailyMeta muted" id="dailyStatusText">-</div>
+          </div>
+          <button class="btn primary" id="btnCheckin">출석하기</button>
+        </div>
+
+        <div style="margin-top:12px;">
+          <h3 style="margin:0 0 8px;">일일 퀘스트</h3>
+          <div class="dailyList" id="questList"></div>
+          <div class="hint">퀘스트 완료하면 🪙 + 상자 티켓 같은 보상이 나와요.</div>
+        </div>
       </div>
 
       <div class="actions" style="margin-top:14px;">
@@ -267,37 +261,28 @@
     <section class="card hidden" id="screenNotebook">
       <div class="cardHeader">
         <h2>오답노트 📒</h2>
-        <p>틀린 문제를 모아서 다시 볼 수 있어요. (기록은 자동 저장)</p>
+        <p>틀린 문제를 모아보고 “오답만 다시풀기”도 할 수 있어요.</p>
       </div>
 
-      <div class="panel" style="margin-top:12px;">
-        <div class="row" style="justify-content:space-between; gap:10px; flex-wrap:wrap;">
-          <div class="row" style="gap:10px; flex-wrap:wrap;">
-            <select id="nbCatFilter" class="select">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div class="row" style="gap:8px;">
+            <span class="muted">필터</span>
+            <select id="noteFilter" class="select">
               <option value="all">전체</option>
-              <option value="수학">수학</option>
-              <option value="과학">과학</option>
-              <option value="영어">영어</option>
-            </select>
-            <select id="nbDiffFilter" class="select">
-              <option value="all">난이도 전체</option>
-              <option value="easy">쉬움</option>
-              <option value="normal">보통</option>
-              <option value="hard">어려움</option>
             </select>
           </div>
-
-          <div class="row" style="gap:10px;">
-            <button class="btn ghost sm" id="btnClearNotebook">오답노트 비우기</button>
-            <button class="btn ghost sm" id="btnBackFromNotebook">돌아가기</button>
+          <div class="row" style="gap:8px;">
+            <button class="btn primary" id="btnPracticeWrong">오답만 다시풀기</button>
+            <button class="btn ghost" id="btnClearNotes">오답노트 비우기</button>
+            <button class="btn ghost" id="btnBackFromNotes">돌아가기</button>
           </div>
         </div>
-
-        <div class="hint" id="nbSummary" style="margin-top:10px;">-</div>
       </div>
 
       <div class="panel" style="margin-top:12px;">
-        <div class="nbList" id="nbList"></div>
+        <div class="noteList" id="noteList"></div>
+        <div class="muted" id="noteEmpty" style="margin-top:6px;"></div>
       </div>
     </section>
 
@@ -305,7 +290,7 @@
     <section class="card hidden" id="screenResult">
       <div class="cardHeader">
         <h2>결과 🎉</h2>
-        <p>점수/코인/XP가 반영됐어요!</p>
+        <p>점수 + 코인 + XP가 반영됐어요.</p>
       </div>
 
       <div class="resultGrid">
@@ -321,8 +306,9 @@
             <div><span class="muted">맞춘 개수</span> <b id="correctCount">0</b></div>
             <div><span class="muted">틀린 개수</span> <b id="wrongCount">0</b></div>
             <div><span class="muted">난이도</span> <b id="finalDiff">-</b></div>
-            <div><span class="muted">캐릭터</span> <b id="finalChar">-</b></div>
+            <div><span class="muted">카테고리</span> <b id="finalCat">-</b></div>
             <div><span class="muted">획득 코인</span> <b id="finalCoins">0</b> 🪙</div>
+            <div><span class="muted">획득 XP</span> <b id="finalXP">0</b></div>
           </div>
         </div>
       </div>
@@ -330,13 +316,13 @@
       <div class="actions">
         <button class="btn primary" id="btnRestart">다시하기 🔁</button>
         <button class="btn ghost" id="btnOpenShop4">상점 🛍️</button>
-        <button class="btn ghost" id="btnOpenNotebook4">오답노트</button>
+        <button class="btn ghost" id="btnOpenNotebook3">오답노트</button>
         <button class="btn ghost" id="btnHome">처음으로</button>
       </div>
     </section>
 
     <footer class="footer muted">
-      data.json에 (cat: 수학/과학/영어)를 넣으면 카테고리 필터가 동작해요 🙂
+      data.json만 늘리면 문제/카테고리가 자동으로 확장돼요 🙂
     </footer>
   </main>
 
