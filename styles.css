@@ -1,20 +1,27 @@
 :root{
   --bg1:#0b1220;
-  --bg2:#101a2c;
+  --bg2:#0f1a2f;
+
   --card: rgba(255,255,255,.08);
-  --text:#f5f7ff;
-  --muted: rgba(245,247,255,.75);
+  --card2: rgba(255,255,255,.12);
   --line: rgba(255,255,255,.12);
+
+  --text:#f5f7ff;
+  --muted: rgba(245,247,255,.74);
+
   --shadow: 0 18px 60px rgba(0,0,0,.35);
   --radius: 22px;
 
   --btn: rgba(255,255,255,.10);
   --btn2: rgba(255,255,255,.16);
 
-  --rarity-common: rgba(255,255,255,.18);
-  --rarity-rare: rgba(96,165,250,.55);
-  --rarity-epic: rgba(244,114,182,.55);
-  --rarity-legend: rgba(250,204,21,.65);
+  --good: rgba(74,222,128,.95);
+  --bad: rgba(244,114,182,.95);
+  --blue: rgba(96,165,250,.95);
+
+  --easy: rgba(74,222,128,.55);
+  --normal: rgba(96,165,250,.55);
+  --hard: rgba(244,114,182,.55);
 }
 
 *{box-sizing:border-box}
@@ -23,9 +30,10 @@ body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
   color:var(--text);
-  background: radial-gradient(1000px 650px at 15% 10%, #1a2b55 0%, transparent 55%),
-              radial-gradient(900px 650px at 80% 20%, #45206e 0%, transparent 55%),
-              linear-gradient(180deg, var(--bg1), var(--bg2));
+  background:
+    radial-gradient(1000px 650px at 15% 10%, #1a2b55 0%, transparent 55%),
+    radial-gradient(900px 650px at 80% 20%, #45206e 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
   overflow-x:hidden;
 }
 
@@ -40,11 +48,12 @@ body{
 }
 
 .app{
-  max-width: 980px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 18px 16px 28px;
 }
 
+/* -------- Topbar -------- */
 .topbar{
   display:flex;
   align-items:center;
@@ -53,7 +62,15 @@ body{
   padding:10px 2px 16px;
 }
 
-.brand{display:flex; gap:12px; align-items:center;}
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  cursor:pointer;
+  user-select:none;
+}
+.brand:focus{outline:2px solid rgba(255,255,255,.22); outline-offset:6px; border-radius:16px}
+
 .logo{
   width:44px;height:44px;
   display:grid; place-items:center;
@@ -62,7 +79,7 @@ body{
   border:1px solid var(--line);
   box-shadow: var(--shadow);
 }
-.title{font-size:18px; font-weight:900}
+.title{font-size:18px; font-weight:1000; letter-spacing:.2px}
 .subtitle{font-size:12.5px; color:var(--muted); margin-top:2px}
 
 .topActions{
@@ -73,7 +90,7 @@ body{
   justify-content:flex-end;
 }
 
-.coinChip{
+.chip{
   display:inline-flex;
   align-items:center;
   gap:8px;
@@ -81,7 +98,7 @@ body{
   border-radius:999px;
   background: rgba(255,255,255,.08);
   border:1px solid var(--line);
-  font-weight:900;
+  font-weight:1000;
   font-size:13px;
 }
 
@@ -90,10 +107,11 @@ body{
   border-radius:999px;
   background: rgba(255,255,255,.08);
   border:1px solid var(--line);
-  font-weight:700;
+  font-weight:800;
   font-size:12.5px;
 }
 
+/* -------- Cards / Panels -------- */
 .card{
   background: var(--card);
   border:1px solid var(--line);
@@ -102,21 +120,10 @@ body{
   padding: 18px;
   backdrop-filter: blur(10px);
 }
-
 .hidden{display:none !important}
 
 .cardHeader h2{margin:0 0 6px; font-size:20px}
 .cardHeader p{margin:0; color:var(--muted); font-size:13px}
-
-.grid2{
-  margin-top:14px;
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:12px;
-}
-@media (max-width: 720px){
-  .grid2{grid-template-columns:1fr}
-}
 
 .panel{
   background: rgba(255,255,255,.06);
@@ -127,6 +134,7 @@ body{
 .panel h3{
   margin:0 0 10px;
   font-size:14.5px;
+  letter-spacing:.2px;
 }
 
 .hint{
@@ -136,6 +144,90 @@ body{
   line-height:1.35;
 }
 
+.muted{color:var(--muted)}
+.dot{opacity:.7; padding:0 6px}
+
+/* Layout helpers */
+.grid2{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+@media (max-width: 780px){
+  .grid2{grid-template-columns:1fr}
+}
+.row{display:flex; align-items:center; gap:8px}
+.rowBetween{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.previewRow{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+
+/* -------- Buttons -------- */
+.actions{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.btn{
+  border:1px solid var(--line);
+  background: var(--btn);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 16px;
+  cursor:pointer;
+  font-weight:1000;
+  transition: transform .10s ease, background .10s ease, border-color .10s ease;
+}
+.btn:hover{transform: translateY(-1px); background: var(--btn2)}
+.btn:disabled{opacity:.55; cursor:not-allowed; transform:none}
+
+.btn.primary{
+  background: rgba(99,102,241,.25);
+  border-color: rgba(99,102,241,.45);
+}
+.btn.ghost{background: rgba(255,255,255,.06)}
+.btn.sm{
+  padding:10px 12px;
+  border-radius:999px;
+  font-size:13px;
+}
+
+/* -------- Inputs / Select -------- */
+.input{
+  width:120px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.12);
+  color: var(--text);
+  outline:none;
+  font-weight:900;
+}
+.select{
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.12);
+  color: var(--text);
+  outline:none;
+  font-weight:900;
+}
+
+/* Toggle */
+.toggle{
+  display:inline-flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  font-weight:900;
+  color: var(--text);
+}
+.toggle input{transform: scale(1.1)}
+
+/* -------- Segmented controls -------- */
 .seg{
   display:flex;
   border:1px solid var(--line);
@@ -153,37 +245,34 @@ body{
   background: transparent;
   color: var(--muted);
   cursor:pointer;
-  font-weight:900;
-  white-space:nowrap;
+  font-weight:1000;
+  min-width: 76px;
 }
 .segBtn.active{
   background: rgba(255,255,255,.12);
   color: var(--text);
 }
 
-.row{display:flex; align-items:center; gap:8px}
-.muted{color:var(--muted)}
-.dot{opacity:.7; padding:0 6px}
-
-.input, .select{
-  width: 100%;
-  padding:10px 12px;
-  border-radius:14px;
+/* -------- Badges -------- */
+.badge{
+  font-size:11px;
+  font-weight:1000;
+  padding:6px 8px;
+  border-radius:999px;
   border:1px solid var(--line);
-  background: rgba(0,0,0,.12);
-  color: var(--text);
-  outline:none;
-  font-weight:800;
+  background: rgba(255,255,255,.08);
+  white-space:nowrap;
 }
-.select{cursor:pointer}
+.tagRow{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
 
+/* -------- Characters list -------- */
 .chars{
   display:grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
   gap:10px;
 }
-@media (max-width: 720px){
-  .chars{grid-template-columns: 1fr}
+@media (max-width: 780px){
+  .chars{grid-template-columns:1fr}
 }
 .charCard{
   display:flex;
@@ -199,58 +288,10 @@ body{
 .charCard:hover{transform: translateY(-2px); background: rgba(255,255,255,.07)}
 .charCard.active{border-color: rgba(255,255,255,.35); background: rgba(255,255,255,.10)}
 .charEmoji{font-size:30px}
-.charMeta .name{font-weight:900}
+.charMeta .name{font-weight:1000}
 .charMeta .desc{font-size:12px; color:var(--muted); margin-top:2px}
 
-.actions{
-  margin-top:14px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.btn{
-  border:1px solid var(--line);
-  background: var(--btn);
-  color: var(--text);
-  padding: 12px 14px;
-  border-radius: 16px;
-  cursor:pointer;
-  font-weight:900;
-  transition: transform .10s ease, background .10s ease;
-}
-.btn:hover{transform: translateY(-1px); background: var(--btn2)}
-.btn:disabled{opacity:.55; cursor:not-allowed; transform:none}
-.btn.primary{
-  background: rgba(99,102,241,.25);
-  border-color: rgba(99,102,241,.45);
-}
-.btn.ghost{background: rgba(255,255,255,.06)}
-.btn.sm{
-  padding:10px 12px;
-  border-radius:999px;
-  font-size:13px;
-}
-
-.miniStats{
-  margin-top:14px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border:1px dashed rgba(255,255,255,.22);
-  background: rgba(0,0,0,.08);
-  font-size:13px;
-}
-
-/* Quiz header */
-.quizHeader{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-}
-.avatarWrap{display:flex; align-items:center; gap:12px}
-
-/* Avatar layered */
+/* -------- Avatar (layered) -------- */
 .avatar{
   width:64px; height:64px;
   display:grid; place-items:center;
@@ -260,9 +301,10 @@ body{
   position:relative;
   overflow:hidden;
 }
-.avatar.big{width:86px; height:86px; border-radius:24px}
+.avatar.big{width:92px; height:92px; border-radius:26px}
 .avatar .base{font-size:34px; transform: translateY(2px)}
-.avatar.big .base{font-size:46px; transform: translateY(3px)}
+.avatar.big .base{font-size:48px; transform: translateY(3px)}
+
 .avatar .layer{
   position:absolute;
   font-size:18px;
@@ -270,16 +312,20 @@ body{
   user-select:none;
 }
 .avatar.big .layer{font-size:22px}
+
+/* slots */
+.avatar .layer.skin{top:6px; left:50%; transform:translateX(-50%); opacity:.95}
 .avatar .layer.hat{top:2px; left:50%; transform: translateX(-50%);}
 .avatar .layer.face{top:24px; left:50%; transform: translateX(-50%);}
 .avatar .layer.hand{bottom:6px; left:8px;}
 .avatar .layer.effect{bottom:6px; right:8px;}
-.avatar .layer.mood{inset:0; display:grid; place-items:center; font-size:24px; opacity:0}
+.avatar .layer.mood{inset:0; display:grid; place-items:center; font-size:24px; opacity:0; transition: opacity .18s ease}
+.avatar.big .layer.mood{font-size:32px}
 
-.avatarMeta .avatarName{font-weight:1000; font-size:14px}
-.avatarMeta .avatarSub{margin-top:3px; color:var(--muted); font-size:12.5px}
+.avatarName{font-weight:1000; font-size:14px}
+.growMeta{min-width: 260px}
 
-.quizMeta{min-width: 280px; flex:1}
+/* -------- Meters -------- */
 .meter{
   height: 10px;
   border-radius:999px;
@@ -294,24 +340,95 @@ body{
   background: linear-gradient(90deg, rgba(74,222,128,.85), rgba(96,165,250,.85), rgba(244,114,182,.85));
   transition: width .25s ease;
 }
-.metaRow{margin-top:8px; font-size:12.5px; color:var(--muted)}
-.timerBar{
+
+.metaRow{
   margin-top:8px;
-  height: 10px;
-  border-radius:999px;
-  background: rgba(0,0,0,.20);
-  border:1px solid var(--line);
-  overflow:hidden;
-}
-.timerFill{
-  height:100%;
-  width:0%;
-  border-radius:999px;
-  background: linear-gradient(90deg, rgba(250,204,21,.85), rgba(244,114,182,.85));
-  transition: width .10s linear;
+  font-size:12.5px;
+  color:var(--muted);
 }
 
-/* Question */
+/* -------- Dashboard layout -------- */
+.dashGrid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 1.3fr .7fr;
+  gap:12px;
+}
+@media (max-width: 900px){
+  .dashGrid{grid-template-columns:1fr}
+}
+
+/* Chest cards row */
+.chestRow{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:10px;
+}
+.chestCard{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+}
+.chestEmoji{font-size:26px}
+.chestName{font-weight:1000}
+
+/* Mission lists */
+.missionList{
+  display:grid;
+  gap:10px;
+}
+.missionItem{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  border-radius:18px;
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.missionLeft{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.missionTitle{font-weight:1000}
+.missionSub{font-size:12px; color:var(--muted)}
+.missionRight{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+
+/* -------- Quiz -------- */
+.quizHeader{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.avatarWrap{display:flex; align-items:center; gap:12px}
+
+.avatarMeta .avatarSub{margin-top:3px; color:var(--muted); font-size:12.5px}
+
+.quizMeta{min-width: 300px; flex:1}
+
+.timerBarWrap{
+  margin-top:10px;
+  padding:10px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+}
+.timerLabel{
+  font-size:12.5px;
+  color:var(--muted);
+  font-weight:1000;
+  margin-bottom:8px;
+}
+
 .questionBox{
   margin-top:14px;
   padding: 14px;
@@ -319,6 +436,7 @@ body{
   border:1px solid var(--line);
   background: rgba(0,0,0,.10);
 }
+
 .qBadge{
   display:inline-flex;
   align-items:center;
@@ -327,17 +445,24 @@ body{
   border:1px solid var(--line);
   background: rgba(255,255,255,.08);
   font-size:12px;
-  font-weight:900;
+  font-weight:1000;
 }
-.qMetaLine{margin-top:8px; font-size:12.5px}
-.question{margin: 10px 0 12px; font-size: 22px; line-height:1.25}
+
+.question{
+  margin: 10px 0 12px;
+  font-size: 22px;
+  line-height:1.25;
+  letter-spacing:.1px;
+}
 
 .choices{
   display:grid;
   grid-template-columns: 1fr 1fr;
   gap:10px;
 }
-@media (max-width: 720px){ .choices{grid-template-columns:1fr} }
+@media (max-width: 780px){
+  .choices{grid-template-columns:1fr}
+}
 
 .choiceBtn{
   text-align:left;
@@ -346,7 +471,7 @@ body{
   border:1px solid var(--line);
   background: rgba(255,255,255,.08);
   cursor:pointer;
-  font-weight:900;
+  font-weight:1000;
   transition: transform .10s ease, background .10s ease, border-color .10s ease;
   min-height: 54px;
 }
@@ -360,38 +485,84 @@ body{
   background: rgba(244,114,182,.12);
 }
 
-.feedback{margin-top:12px; min-height: 22px; font-weight:900}
-.feedback.good{color: rgba(74,222,128,.95)}
-.feedback.bad{color: rgba(244,114,182,.95)}
+.feedback{
+  margin-top:12px;
+  min-height: 22px;
+  font-weight:1000;
+}
+.feedback.good{color: var(--good)}
+.feedback.bad{color: var(--bad)}
 .feedback.neutral{color: var(--muted)}
 
-/* Shop */
-.shopTop{
+/* -------- Result -------- */
+.resultGrid{
   margin-top:14px;
   display:grid;
   grid-template-columns: 1.2fr .8fr;
   gap:12px;
 }
-@media (max-width: 720px){ .shopTop{grid-template-columns:1fr} }
-.previewRow{display:flex; gap:14px; align-items:center;}
+@media (max-width: 780px){
+  .resultGrid{grid-template-columns:1fr}
+}
+.bigScore{
+  border-radius: 22px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.08);
+  padding: 16px;
+}
+.bigScore .label{color:var(--muted); font-weight:1000}
+.bigScore .value{font-size: 46px; font-weight:1000; margin-top:6px}
+.bigScore .sub{margin-top:6px}
+
+.summary{
+  display:grid;
+  gap:8px;
+  font-size:13px;
+}
+
+/* Wrong list (result/notebook) */
+.wrongList{
+  display:grid;
+  gap:10px;
+}
+.wrongItem{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  border-radius:18px;
+  padding:12px;
+}
+.wrongHead{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.wrongQ{margin-top:8px; font-weight:1000}
+.wrongMeta{margin-top:6px; font-size:12px; color:var(--muted)}
+.wrongActions{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap}
+
+/* -------- Shop / Inventory / Gacha layout -------- */
+.shopWrap{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap:12px;
+}
+@media (max-width: 900px){
+  .shopWrap{grid-template-columns:1fr}
+}
 
 .shopGrid{
-  margin-top:10px;
   display:grid;
   grid-template-columns: repeat(4, minmax(0,1fr));
   gap:10px;
+  margin-top:12px;
 }
-@media (max-width: 720px){ .shopGrid{grid-template-columns: repeat(2, minmax(0,1fr))} }
-
-.shopGrid3{
-  margin-top:10px;
-  display:grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
-  gap:10px;
+@media (max-width: 900px){
+  .shopGrid{grid-template-columns: repeat(2, minmax(0,1fr))}
 }
-@media (max-width: 720px){ .shopGrid3{grid-template-columns:1fr} }
 
-.itemCard, .boxCard{
+.itemCard{
   border:1px solid var(--line);
   background: rgba(0,0,0,.10);
   border-radius:18px;
@@ -400,97 +571,145 @@ body{
   transition: transform .10s ease, background .10s ease, border-color .10s ease;
   min-height: 96px;
 }
-.itemCard:hover, .boxCard:hover{transform: translateY(-1px); background: rgba(255,255,255,.08)}
-
+.itemCard:hover{transform: translateY(-1px); background: rgba(255,255,255,.08)}
 .itemTop{display:flex; align-items:center; justify-content:space-between; gap:8px;}
 .itemEmoji{font-size:26px}
 .itemName{font-weight:1000; font-size:13px; margin-top:8px}
 .itemMeta{font-size:12px; color:var(--muted); margin-top:4px}
-
-.badge{
-  font-size:11px;
-  font-weight:1000;
-  padding:6px 8px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  background: rgba(255,255,255,.08);
-}
-.badge.owned{border-color: rgba(74,222,128,.45)}
-.badge.equipped{border-color: rgba(96,165,250,.55)}
-
-.rarityCommon{border-color: var(--rarity-common)}
-.rarityRare{border-color: var(--rarity-rare)}
-.rarityEpic{border-color: var(--rarity-epic)}
-.rarityLegend{border-color: var(--rarity-legend)}
-
 .shopMsg{margin-top:10px; min-height: 18px}
-.fileBtn{position:relative; overflow:hidden}
 
-/* Daily */
-.dailyRow{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.dailyCard{
-  flex:1;
-  border:1px solid var(--line);
-  border-radius:18px;
-  background: rgba(0,0,0,.10);
-  padding:12px;
-}
-.dailyTitle{font-weight:1000}
-.dailyMeta{margin-top:6px; font-size:12.5px}
-.dailyList{display:grid; gap:10px}
-.quest{
-  border:1px solid var(--line);
-  border-radius:18px;
-  background: rgba(0,0,0,.10);
-  padding:12px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.questTitle{font-weight:1000}
-.questMeta{font-size:12.5px}
-
-/* Notebook */
-.noteList{display:grid; gap:10px}
-.note{
-  border:1px solid var(--line);
-  border-radius:18px;
-  background: rgba(0,0,0,.10);
-  padding:12px;
-}
-.noteTop{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
-.noteQ{margin-top:8px; font-weight:1000}
-.noteA{margin-top:6px; font-size:12.5px; color:var(--muted)}
-.noteA b{color:var(--text)}
-
-/* Result */
-.resultGrid{
-  margin-top:14px;
+.invGrid{
   display:grid;
-  grid-template-columns: 1.2fr .8fr;
-  gap:12px;
+  grid-template-columns: repeat(5, minmax(0,1fr));
+  gap:10px;
 }
-@media (max-width: 720px){ .resultGrid{grid-template-columns:1fr} }
-.bigScore{
-  border-radius: 22px;
-  border:1px solid var(--line);
-  background: rgba(255,255,255,.08);
-  padding: 16px;
+@media (max-width: 900px){
+  .invGrid{grid-template-columns: repeat(2, minmax(0,1fr))}
 }
-.bigScore .label{color:var(--muted); font-weight:900}
-.bigScore .value{font-size: 46px; font-weight:1000; margin-top:6px}
-.bigScore .sub{margin-top:6px}
-.summary{display:grid; gap:8px; font-size:13px}
 
-/* FX */
+.equipGrid{
+  display:grid;
+  gap:10px;
+}
+.equipSlot{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  border-radius:18px;
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.equipLeft{display:flex; align-items:center; gap:10px}
+.equipIcon{font-size:22px}
+.equipName{font-weight:1000}
+.equipSub{font-size:12px; color:var(--muted); margin-top:2px}
+
+/* -------- Gacha -------- */
+.gachaBoxArea{
+  margin-top:12px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  padding:14px;
+  display:grid;
+  place-items:center;
+  min-height: 160px;
+}
+.gachaBox{
+  font-size: 64px;
+  filter: drop-shadow(0 16px 30px rgba(0,0,0,.35));
+  transform: translateY(0);
+  transition: transform .18s ease;
+}
+
+.gachaResult{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  border-radius:18px;
+  padding:12px;
+  min-height: 120px;
+}
+
+.historyList{
+  display:grid;
+  gap:8px;
+}
+.historyItem{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  border-radius:16px;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.historyLeft{display:flex; align-items:center; gap:10px}
+.historyEmoji{font-size:20px}
+.historyText{font-size:13px; font-weight:900}
+
+/* -------- Missions / Checkin -------- */
+.checkinGrid{
+  display:grid;
+  grid-template-columns: repeat(7, minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+.checkinCell{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  border-radius:14px;
+  padding:10px 8px;
+  text-align:center;
+  font-weight:1000;
+  font-size:12px;
+}
+.checkinCell.done{
+  border-color: rgba(74,222,128,.45);
+  background: rgba(74,222,128,.12);
+}
+.checkinCell.today{
+  border-color: rgba(96,165,250,.55);
+  background: rgba(96,165,250,.12);
+}
+
+/* Notebook filters */
+.filterRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+/* -------- Footer -------- */
+.footer{
+  margin-top: 14px;
+  padding: 10px 6px;
+  font-size: 12px;
+  text-align:center;
+}
+
+/* -------- FX / Animations -------- */
+.fxLayer{
+  position: fixed;
+  inset: 0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.fx{
+  position:absolute;
+  font-size: 18px;
+  opacity: .95;
+  animation: floatUp 900ms ease-out forwards;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+}
+@keyframes floatUp{
+  0%{transform: translateY(0) scale(1); opacity: .95}
+  100%{transform: translateY(-120px) scale(1.15); opacity: 0}
+}
+
 .bounce{animation: bounce .35s ease}
 @keyframes bounce{
   0%{transform: scale(1)}
@@ -505,17 +724,38 @@ body{
   80%{transform: translateX(-2px)}
 }
 
-.fxLayer{position: fixed; inset: 0; pointer-events:none; overflow:hidden;}
-.fx{
+/* -------- Modal -------- */
+.modal{
+  position: fixed;
+  inset: 0;
+  display:grid;
+  place-items:center;
+  z-index: 50;
+}
+.modal.hidden{display:none !important}
+.modalBackdrop{
   position:absolute;
-  font-size: 18px;
-  opacity: .95;
-  animation: floatUp 900ms ease-out forwards;
-  filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+  inset:0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(6px);
 }
-@keyframes floatUp{
-  0%{transform: translateY(0) scale(1); opacity: .95}
-  100%{transform: translateY(-120px) scale(1.15); opacity: 0}
+.modalCard{
+  position:relative;
+  width:min(520px, calc(100vw - 24px));
+  border-radius: 22px;
+  border:1px solid var(--line);
+  background: rgba(22, 28, 48, .92);
+  box-shadow: var(--shadow);
+  padding: 16px;
 }
-
-.footer{margin-top: 14px; padding: 10px 6px; font-size: 12px; text-align:center}
+.rewardBig{
+  margin-top:14px;
+  font-size: 68px;
+  text-align:center;
+  filter: drop-shadow(0 18px 30px rgba(0,0,0,.35));
+}
+.rewardText{
+  margin-top:10px;
+  text-align:center;
+  font-weight:1000;
+}
