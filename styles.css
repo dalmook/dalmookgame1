@@ -2,16 +2,11 @@
   --bg1:#0b1220;
   --bg2:#101a2c;
   --card: rgba(255,255,255,.08);
-  --card2: rgba(255,255,255,.12);
   --text:#f5f7ff;
   --muted: rgba(245,247,255,.75);
   --line: rgba(255,255,255,.12);
   --shadow: 0 18px 60px rgba(0,0,0,.35);
   --radius: 22px;
-
-  --easy: #4ade80;
-  --normal:#60a5fa;
-  --hard:#f472b6;
 
   --btn: rgba(255,255,255,.10);
   --btn2: rgba(255,255,255,.16);
@@ -66,8 +61,28 @@ body{
   border:1px solid var(--line);
   box-shadow: var(--shadow);
 }
-.title{font-size:18px; font-weight:900; letter-spacing:.2px}
+.title{font-size:18px; font-weight:900}
 .subtitle{font-size:12.5px; color:var(--muted); margin-top:2px}
+
+.topActions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.coinChip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:999px;
+  background: rgba(255,255,255,.08);
+  border:1px solid var(--line);
+  font-weight:900;
+  font-size:13px;
+}
 
 .pill{
   padding:10px 12px;
@@ -128,6 +143,7 @@ body{
   border-radius: 999px;
   padding: 4px;
   gap:4px;
+  flex-wrap:wrap;
 }
 .segBtn{
   flex:1;
@@ -208,6 +224,11 @@ body{
 .btn.ghost{
   background: rgba(255,255,255,.06);
 }
+.btn.sm{
+  padding:10px 12px;
+  border-radius:999px;
+  font-size:13px;
+}
 
 .miniStats{
   margin-top:14px;
@@ -227,6 +248,8 @@ body{
   flex-wrap:wrap;
 }
 .avatarWrap{display:flex; align-items:center; gap:12px}
+
+/* Avatar (layered) */
 .avatar{
   width:64px; height:64px;
   display:grid; place-items:center;
@@ -236,13 +259,23 @@ body{
   position:relative;
   overflow:hidden;
 }
+.avatar.big{width:86px; height:86px; border-radius:24px}
 .avatar .base{font-size:34px; transform: translateY(2px)}
-.avatar .acc{
+.avatar.big .base{font-size:46px; transform: translateY(3px)}
+.avatar .layer{
   position:absolute;
-  right:7px; top:7px;
   font-size:18px;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,.4));
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,.45));
+  user-select:none;
 }
+.avatar.big .layer{font-size:22px}
+.avatar .layer.hat{top:2px; left:50%; transform: translateX(-50%);}
+.avatar .layer.face{top:24px; left:50%; transform: translateX(-50%);}
+.avatar .layer.hand{bottom:6px; left:8px;}
+.avatar .layer.effect{bottom:6px; right:8px;}
+.avatar .layer.mood{inset:0; display:grid; place-items:center; font-size:24px; opacity:.0}
+.avatar.big .layer.mood{font-size:30px}
+
 .avatarMeta .avatarName{font-weight:1000; font-size:14px}
 .avatarMeta .avatarSub{margin-top:3px; color:var(--muted); font-size:12.5px}
 
@@ -289,7 +322,6 @@ body{
   margin: 10px 0 12px;
   font-size: 22px;
   line-height:1.25;
-  letter-spacing:.1px;
 }
 
 .choices{
@@ -331,6 +363,56 @@ body{
 .feedback.bad{color: rgba(244,114,182,.95)}
 .feedback.neutral{color: var(--muted)}
 
+/* Shop */
+.shopTop{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap:12px;
+}
+@media (max-width: 720px){
+  .shopTop{grid-template-columns:1fr}
+}
+.previewRow{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+.shopGrid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+@media (max-width: 720px){
+  .shopGrid{grid-template-columns: repeat(2, minmax(0,1fr))}
+}
+.itemCard{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  border-radius:18px;
+  padding:12px;
+  cursor:pointer;
+  transition: transform .10s ease, background .10s ease, border-color .10s ease;
+  min-height: 96px;
+}
+.itemCard:hover{transform: translateY(-1px); background: rgba(255,255,255,.08)}
+.itemTop{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+.itemEmoji{font-size:26px}
+.itemName{font-weight:1000; font-size:13px; margin-top:8px}
+.itemMeta{font-size:12px; color:var(--muted); margin-top:4px}
+.badge{
+  font-size:11px;
+  font-weight:1000;
+  padding:6px 8px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.08);
+}
+.badge.owned{border-color: rgba(74,222,128,.45)}
+.badge.equipped{border-color: rgba(96,165,250,.55)}
+.shopMsg{margin-top:10px; min-height: 18px}
+.fileBtn{position:relative; overflow:hidden}
+
 /* Result */
 .resultGrid{
   margin-top:14px;
@@ -357,19 +439,14 @@ body{
   font-size:13px;
 }
 
-/* Animations / FX */
-.bounce{
-  animation: bounce .35s ease;
-}
+/* FX */
+.bounce{animation: bounce .35s ease}
 @keyframes bounce{
   0%{transform: scale(1)}
   35%{transform: scale(1.12)}
   100%{transform: scale(1)}
 }
-
-.shake{
-  animation: shake .35s ease;
-}
+.shake{animation: shake .35s ease}
 @keyframes shake{
   0%,100%{transform: translateX(0)}
   25%{transform: translateX(-4px)}
@@ -383,7 +460,6 @@ body{
   pointer-events:none;
   overflow:hidden;
 }
-
 .fx{
   position:absolute;
   font-size: 18px;
