@@ -48,11 +48,7 @@ body{
   padding:10px 2px 16px;
 }
 
-.brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
+.brand{display:flex; gap:12px; align-items:center}
 .logo{
   width:44px;height:44px;
   display:grid; place-items:center;
@@ -72,7 +68,7 @@ body{
   justify-content:flex-end;
 }
 
-.coinChip{
+.chip{
   display:inline-flex;
   align-items:center;
   gap:8px;
@@ -123,11 +119,7 @@ body{
   border-radius: 18px;
   padding: 14px;
 }
-.panel h3{
-  margin:0 0 10px;
-  font-size:14.5px;
-  letter-spacing:.2px;
-}
+.panel h3{margin:0 0 10px; font-size:14.5px}
 
 .hint{
   margin-top:10px;
@@ -154,6 +146,7 @@ body{
   color: var(--muted);
   cursor:pointer;
   font-weight:900;
+  white-space:nowrap;
 }
 .segBtn.active{
   background: rgba(255,255,255,.12);
@@ -171,8 +164,38 @@ body{
   outline:none;
   font-weight:800;
 }
+.select{
+  min-width: 180px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.12);
+  color: var(--text);
+  outline:none;
+  font-weight:800;
+}
 .muted{color:var(--muted)}
 .dot{opacity:.7; padding:0 6px}
+
+.toggle{display:inline-flex; align-items:center; gap:10px; cursor:pointer}
+.toggle input{display:none}
+.toggleUi{
+  width:44px; height:26px; border-radius:999px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.20);
+  position:relative;
+}
+.toggleUi::after{
+  content:"";
+  width:20px; height:20px;
+  border-radius:999px;
+  background: rgba(255,255,255,.70);
+  position:absolute;
+  left:3px; top:2px;
+  transition: all .15s ease;
+}
+.toggle input:checked + .toggleUi::after{left:21px}
+.toggle input:checked + .toggleUi{background: rgba(99,102,241,.28); border-color: rgba(99,102,241,.45)}
 
 .chars{
   display:grid;
@@ -221,14 +244,8 @@ body{
   background: rgba(99,102,241,.25);
   border-color: rgba(99,102,241,.45);
 }
-.btn.ghost{
-  background: rgba(255,255,255,.06);
-}
-.btn.sm{
-  padding:10px 12px;
-  border-radius:999px;
-  font-size:13px;
-}
+.btn.ghost{background: rgba(255,255,255,.06)}
+.btn.sm{padding:10px 12px; border-radius:999px; font-size:13px}
 
 .miniStats{
   margin-top:14px;
@@ -249,7 +266,7 @@ body{
 }
 .avatarWrap{display:flex; align-items:center; gap:12px}
 
-/* Avatar (layered) */
+/* Avatar layered */
 .avatar{
   width:64px; height:64px;
   display:grid; place-items:center;
@@ -273,7 +290,7 @@ body{
 .avatar .layer.face{top:24px; left:50%; transform: translateX(-50%);}
 .avatar .layer.hand{bottom:6px; left:8px;}
 .avatar .layer.effect{bottom:6px; right:8px;}
-.avatar .layer.mood{inset:0; display:grid; place-items:center; font-size:24px; opacity:.0}
+.avatar .layer.mood{inset:0; display:grid; place-items:center; font-size:24px; opacity:0}
 .avatar.big .layer.mood{font-size:30px}
 
 .avatarMeta .avatarName{font-weight:1000; font-size:14px}
@@ -294,11 +311,7 @@ body{
   background: linear-gradient(90deg, rgba(74,222,128,.85), rgba(96,165,250,.85), rgba(244,114,182,.85));
   transition: width .25s ease;
 }
-.metaRow{
-  margin-top:8px;
-  font-size:12.5px;
-  color:var(--muted);
-}
+.metaRow{margin-top:8px; font-size:12.5px; color:var(--muted)}
 
 /* Question */
 .questionBox{
@@ -308,6 +321,7 @@ body{
   border:1px solid var(--line);
   background: rgba(0,0,0,.10);
 }
+.qMetaRow{display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap}
 .qBadge{
   display:inline-flex;
   align-items:center;
@@ -318,11 +332,16 @@ body{
   font-size:12px;
   font-weight:900;
 }
-.question{
-  margin: 10px 0 12px;
-  font-size: 22px;
-  line-height:1.25;
+.qCat{
+  padding: 8px 10px;
+  border-radius: 999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  font-size:12px;
+  font-weight:900;
+  color: var(--muted);
 }
+.question{margin: 10px 0 12px; font-size: 22px; line-height:1.25}
 
 .choices{
   display:grid;
@@ -332,7 +351,6 @@ body{
 @media (max-width: 720px){
   .choices{grid-template-columns:1fr}
 }
-
 .choiceBtn{
   text-align:left;
   padding: 12px 12px;
@@ -345,20 +363,10 @@ body{
   min-height: 54px;
 }
 .choiceBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.12)}
-.choiceBtn.correct{
-  border-color: rgba(74,222,128,.7);
-  background: rgba(74,222,128,.15);
-}
-.choiceBtn.wrong{
-  border-color: rgba(244,114,182,.7);
-  background: rgba(244,114,182,.12);
-}
+.choiceBtn.correct{border-color: rgba(74,222,128,.7); background: rgba(74,222,128,.15)}
+.choiceBtn.wrong{border-color: rgba(244,114,182,.7); background: rgba(244,114,182,.12)}
 
-.feedback{
-  margin-top:12px;
-  min-height: 22px;
-  font-weight:900;
-}
+.feedback{margin-top:12px; min-height: 22px; font-weight:900}
 .feedback.good{color: rgba(74,222,128,.95)}
 .feedback.bad{color: rgba(244,114,182,.95)}
 .feedback.neutral{color: var(--muted)}
@@ -373,11 +381,8 @@ body{
 @media (max-width: 720px){
   .shopTop{grid-template-columns:1fr}
 }
-.previewRow{
-  display:flex;
-  gap:14px;
-  align-items:center;
-}
+.previewRow{display:flex; gap:14px; align-items:center}
+
 .shopGrid{
   display:grid;
   grid-template-columns: repeat(4, minmax(0,1fr));
@@ -393,13 +398,14 @@ body{
   padding:12px;
   cursor:pointer;
   transition: transform .10s ease, background .10s ease, border-color .10s ease;
-  min-height: 96px;
+  min-height: 106px;
 }
 .itemCard:hover{transform: translateY(-1px); background: rgba(255,255,255,.08)}
 .itemTop{display:flex; align-items:center; justify-content:space-between; gap:8px;}
 .itemEmoji{font-size:26px}
 .itemName{font-weight:1000; font-size:13px; margin-top:8px}
 .itemMeta{font-size:12px; color:var(--muted); margin-top:4px}
+
 .badge{
   font-size:11px;
   font-weight:1000;
@@ -410,8 +416,57 @@ body{
 }
 .badge.owned{border-color: rgba(74,222,128,.45)}
 .badge.equipped{border-color: rgba(96,165,250,.55)}
+.badge.rare{border-color: rgba(244,114,182,.55)}
+.badge.legend{border-color: rgba(251,191,36,.65)}
+
 .shopMsg{margin-top:10px; min-height: 18px}
 .fileBtn{position:relative; overflow:hidden}
+
+.dailyRow{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+@media (max-width: 720px){
+  .dailyRow{grid-template-columns:1fr}
+}
+.dailyCard{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  border-radius:18px;
+  padding:12px;
+}
+.dailyTitle{font-weight:1000}
+.questList{margin-top:10px; display:grid; gap:10px}
+.questItem{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.questLeft{display:grid; gap:4px}
+.questName{font-weight:1000; font-size:13px}
+.questProg{font-size:12px; color:var(--muted)}
+.questReward{font-size:12px; color:var(--muted); white-space:nowrap}
+
+/* Notebook */
+.nbList{display:grid; gap:10px}
+.nbCard{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.10);
+  border-radius:18px;
+  padding:12px;
+}
+.nbTop{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.nbTitle{font-weight:1000}
+.nbMeta{font-size:12px; color:var(--muted); margin-top:4px}
+.nbQ{margin-top:10px; font-weight:900}
+.nbAns{margin-top:8px; font-size:12.5px; color:var(--muted)}
+.nbActions{margin-top:10px; display:flex; gap:10px; flex-wrap:wrap}
 
 /* Result */
 .resultGrid{
@@ -433,11 +488,7 @@ body{
 .bigScore .value{font-size: 46px; font-weight:1000; margin-top:6px}
 .bigScore .sub{margin-top:6px}
 
-.summary{
-  display:grid;
-  gap:8px;
-  font-size:13px;
-}
+.summary{display:grid; gap:8px; font-size:13px}
 
 /* FX */
 .bounce{animation: bounce .35s ease}
@@ -454,12 +505,7 @@ body{
   80%{transform: translateX(-2px)}
 }
 
-.fxLayer{
-  position: fixed;
-  inset: 0;
-  pointer-events:none;
-  overflow:hidden;
-}
+.fxLayer{position: fixed; inset: 0; pointer-events:none; overflow:hidden}
 .fx{
   position:absolute;
   font-size: 18px;
@@ -472,9 +518,4 @@ body{
   100%{transform: translateY(-120px) scale(1.15); opacity: 0}
 }
 
-.footer{
-  margin-top: 14px;
-  padding: 10px 6px;
-  font-size: 12px;
-  text-align:center;
-}
+.footer{margin-top: 14px; padding: 10px 6px; font-size: 12px; text-align:center}
