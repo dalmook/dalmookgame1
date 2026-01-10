@@ -15,10 +15,17 @@
         <div class="logo">🧠</div>
         <div>
           <div class="title">키즈 퀴즈랜드</div>
-          <div class="subtitle">난이도 고르고, 캐릭터 고르고, 정답 맞추면 캐릭터가 성장해요!</div>
+          <div class="subtitle">문제 맞추면 코인! 상점에서 아이템 사고 꾸며요 ✨</div>
         </div>
       </div>
-      <div class="pill" id="pillStatus">준비중</div>
+
+      <div class="topActions">
+        <div class="coinChip" title="내 코인">
+          🪙 <b id="coinText">0</b>
+        </div>
+        <button class="btn ghost sm" id="btnOpenShop">상점</button>
+        <div class="pill" id="pillStatus">준비중</div>
+      </div>
     </header>
 
     <!-- SETUP -->
@@ -36,7 +43,7 @@
             <button class="segBtn" data-diff="normal">보통</button>
             <button class="segBtn" data-diff="hard">어려움</button>
           </div>
-          <div class="hint" id="diffHint">쉬움: 1~2학년 느낌 (가볍게!)</div>
+          <div class="hint" id="diffHint">쉬움: 가볍게!</div>
         </div>
 
         <div class="panel">
@@ -45,22 +52,23 @@
             <input id="countInput" class="input" type="number" min="5" max="30" value="10" />
             <span class="muted">개</span>
           </div>
-          <div class="hint">추천: 10문제 (집중력 딱 좋아요)</div>
+          <div class="hint">추천: 10문제</div>
         </div>
       </div>
 
       <div class="panel">
         <h3>캐릭터</h3>
         <div class="chars" id="charList"></div>
-        <div class="hint">정답 맞출 때마다 모자/안경/왕관 같은 장식이 바뀌어요 ✨</div>
+        <div class="hint">상점에서 모자/안경/효과 아이템으로 꾸밀 수 있어요.</div>
       </div>
 
       <div class="actions">
         <button class="btn primary" id="btnStart">시작하기 🚀</button>
-        <button class="btn ghost" id="btnResetBest" title="최고기록 초기화">최고기록 초기화</button>
+        <button class="btn ghost" id="btnOpenShop2">상점 가기 🛍️</button>
+        <button class="btn ghost" id="btnResetAll" title="코인/아이템/기록 초기화">전체 초기화</button>
       </div>
 
-      <div class="miniStats" id="bestBox">
+      <div class="miniStats">
         <span class="muted">최고기록:</span> <b id="bestText">-</b>
       </div>
     </section>
@@ -71,7 +79,11 @@
         <div class="avatarWrap">
           <div class="avatar" id="avatar">
             <span class="base" id="avatarBase">🦖</span>
-            <span class="acc" id="avatarAcc"></span>
+            <span class="layer hat" id="avatarHat"></span>
+            <span class="layer face" id="avatarFace"></span>
+            <span class="layer hand" id="avatarHand"></span>
+            <span class="layer effect" id="avatarEffect"></span>
+            <span class="layer mood" id="avatarMood"></span>
           </div>
           <div class="avatarMeta">
             <div class="avatarName" id="avatarName">캐릭터</div>
@@ -79,6 +91,8 @@
               <span>레벨 <b id="levelText">1</b></span>
               <span class="dot">•</span>
               <span>연속정답 <b id="streakText">0</b></span>
+              <span class="dot">•</span>
+              <span>이번판 코인 <b id="runCoinsText">0</b></span>
             </div>
           </div>
         </div>
@@ -104,49 +118,25 @@
 
         <div class="actions">
           <button class="btn ghost" id="btnQuit">그만하기</button>
+          <button class="btn ghost" id="btnOpenShop3">상점</button>
           <button class="btn primary hidden" id="btnNext">다음 문제 ➜</button>
         </div>
       </div>
     </section>
 
-    <!-- RESULT -->
-    <section class="card hidden" id="screenResult">
+    <!-- SHOP -->
+    <section class="card hidden" id="screenShop">
       <div class="cardHeader">
-        <h2>결과 🎉</h2>
-        <p>잘했어요! 다시 도전해도 좋아요.</p>
+        <h2>상점 🛍️</h2>
+        <p>코인으로 아이템을 사고, 내 캐릭터에 장착해요.</p>
       </div>
 
-      <div class="resultGrid">
-        <div class="bigScore">
-          <div class="label">이번 점수</div>
-          <div class="value" id="finalScore">0</div>
-          <div class="sub muted" id="finalSub">-</div>
-        </div>
-
-        <div class="panel">
-          <h3>요약</h3>
-          <div class="summary">
-            <div><span class="muted">맞춘 개수</span> <b id="correctCount">0</b></div>
-            <div><span class="muted">틀린 개수</span> <b id="wrongCount">0</b></div>
-            <div><span class="muted">난이도</span> <b id="finalDiff">-</b></div>
-            <div><span class="muted">캐릭터</span> <b id="finalChar">-</b></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="btn primary" id="btnRestart">다시하기 🔁</button>
-        <button class="btn ghost" id="btnHome">처음으로</button>
-      </div>
-    </section>
-
-    <footer class="footer muted">
-      data.json만 바꾸면 문제를 계속 추가할 수 있어요 🙂
-    </footer>
-  </main>
-
-  <div id="fxLayer" class="fxLayer" aria-hidden="true"></div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+      <div class="shopTop">
+        <div class="panel shopPreview">
+          <div class="previewRow">
+            <div class="avatar big" id="shopAvatar">
+              <span class="base" id="shopAvatarBase">🦖</span>
+              <span class="layer hat" id="shopAvatarHat"></span>
+              <span class="layer face" id="shopAvatarFace"></span>
+              <span class="layer hand" id="shopAvatarHand"></span>
+              <span class="layer eff
