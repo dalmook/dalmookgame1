@@ -492,3 +492,149 @@ function closeRewardModal(){ /* Part2 */ }
 function exportProfile(){ /* Part2 */ }
 function importProfileFile(file){ /* Part2 */ }
 function resetAll(){ /* Part2 */ }
+
+// --------------------
+// settings (Part2)
+// --------------------
+
+// 공통: 메시지 출력(있으면 toast류 사용, 없으면 alert)
+function _notify(msg){
+  try{
+    if (typeof toast === "function") return toast(msg);
+    if (typeof shopToast === "function") return shopToast(msg);
+    if (typeof pill === "function") return pill(msg);
+  }catch(_){}
+  alert(msg);
+}
+
+function exportProfile(){
+  try{
+    // export 포맷: { app, version, exportedAt, profile }
+    const payload = {
+      app: "kids-quiz-land",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      profile: (typeof profile !== "undefined" ? profile : null),
+    };
+
+    const text = JSON.stringify(payload, null, 2);
+    const blob = new Blob([text], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `kids_quiz_profile_${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
+    _notify("내보내기 완료! JSON 파일로 저장했어요.");
+  }catch(err){
+    console.warn(err);
+    _notify("내보내기 실패… 콘솔 로그를 확인해주세요.");
+  }
+}
+
+async function importProfileFile(file){
+  if (!file) return;
+
+  try{
+    const raw = await file.text();
+    let obj = JSON.parse(raw);
+
+    // 1) exportProfile()로 내보낸 형태면 obj.profile가 실제 프로필
+    if (obj && typeof obj === "object" && obj.profile && typeof obj.profile === "object") {
+      obj = obj.profile;
+    }
+
+    if (!obj || typeof obj !== "object") throw new Error("Invalid JSON structure");
+
+    // 병합/검증 로직이 Part1에 있으면 최대한 활용
+    // - mergeProfile(obj) 형태
+    // - 또는 mergeProfile(obj, base) 형태
+    let nextProfile = obj;
+
+    if (typeof mergeProfile === "function") {
+      try {
+        // 2-args 지원하는 경우도 있으니 안전하게 시도
+        nextProfile = (mergeProfile.length >= 2)
+          ? mergeProfile(obj, (typeof profile !== "undefined" ? profile : undefined))
+          : mergeProfile(obj);
+      } catch (e) {
+        console.warn("mergeProfile failed; fallback to raw profile", e);
+        nextProfile = obj;
+      }
+    }
+
+    // 저장
+    if (typeof profile !== "undefined") profile = nextProfile;
+
+    if (typeof saveProfile === "function") {
+      saveProfile();
+    } else if (typeof PROFILE_KEY !== "undefined") {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(nextProfile));
+    } else {
+      // PROFILE_KEY가 없으면, 그래도 최대한 저장 시도(접두사)
+      localStorage.setItem("kids_quiz_profile_v1", JSON.stringify(nextProfile));
+    }
+
+    // file input reset
+    const inp = document.getElementById("importFile");
+    if (inp) inp.value = "";
+
+    _notify("가져오기 완료! 데이터를 반영할게요.");
+
+    // 화면 갱신(Part1에 함수가 있으면 호출, 없으면 리로드)
+    const rerenderCandidates = ["refreshAll", "renderAll", "renderHome", "updateUI", "updateCoinUI"];
+    let did = false;
+    for (const fn of rerenderCandidates) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); did = true; } catch(e){ console.warn(fn, e); }
+      }
+    }
+    if (!did) location.reload();
+
+  }catch(err){
+    console.warn(err);
+    _notify("가져오기 실패… 올바른 JSON 파일인지 확인해주세요.");
+    const inp = document.getElementById("importFile");
+    if (inp) inp.value = "";
+  }
+}
+
+function resetAll(){
+  if (!confirm("전체 초기화할까요?\n(코인/아이템/상자/오답/출석/기록이 모두 삭제됩니다)")) return;
+
+  try{
+    // 1) 알려진 키들 제거
+    const knownKeys = [];
+    if (typeof PROFILE_KEY !== "undefined") knownKeys.push(PROFILE_KEY);
+    if (typeof WRONG_KEY !== "undefined") knownKeys.push(WRONG_KEY);
+    if (typeof SETTINGS_KEY !== "undefined") knownKeys.push(SETTINGS_KEY);
+    if (typeof NOTEBOOK_KEY !== "undefined") knownKeys.push(NOTEBOOK_KEY);
+
+    knownKeys.forEach(k => {
+      try { localStorage.removeItem(k); } catch(_){}
+    });
+
+    // 2) 앱 접두사로 저장했을 가능성까지 광범위 제거
+    const prefixList = [
+      "kids_quiz_",
+      "kids-quiz-",
+      "kql_",
+    ];
+    Object.keys(localStorage).forEach((k) => {
+      if (prefixList.some(p => k.startsWith(p))) {
+        try { localStorage.removeItem(k); } catch(_){}
+      }
+    });
+
+  }catch(err){
+    console.warn(err);
+  }
+
+  _notify("초기화 완료! 새로 시작합니다.");
+  location.reload();
+}
+
